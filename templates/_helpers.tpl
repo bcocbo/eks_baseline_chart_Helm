@@ -1,60 +1,33 @@
 {{/*
-Expand the name of the chart.
+Define el nombre completo del microservicio
 */}}
-{{- define "eks-baseline-chart.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+
+{{- define "eks-baseline.fullname" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name | lower | replace "_" "-" | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+
+{{/*
+Define el nombre del chart con versión
+*/}}
+{{- define "eks-baseline.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
+Etiquetas comunes estándar
 */}}
-{{- define "eks-baseline-chart.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "eks-baseline-chart.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "eks-baseline-chart.labels" -}}
-helm.sh/chart: {{ include "eks-baseline-chart.chart" . }}
-{{ include "eks-baseline-chart.selectorLabels" . }}
+{{- define "eks-baseline.labels" -}}
+helm.sh/chart: {{ include "eks-baseline.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "eks-baseline-chart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "eks-baseline-chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "eks-baseline-chart.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "eks-baseline-chart.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.bancolombia.com.co/env: {{ .Values.microservice.labels.environment }}
+app.bancolombia.com.co/cost-center: {{ .Values.microservice.labels.costCenter }}
+app.bancolombia.com.co/application-code: {{ .Values.microservice.labels.applicationCode }}
+app.bancolombia.com.co/project: {{ .Values.microservice.labels.projectName }}
+app.bancolombia.com.co/pmo: {{ .Values.microservice.labels.pmo }}
+app.bancolombia.com.co/responsible: {{ .Values.microservice.labels.responsible }}
 {{- end }}
