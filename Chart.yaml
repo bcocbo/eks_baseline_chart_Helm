@@ -1,14 +1,6 @@
 apiVersion: v2
-name: eks-baseline-chart
-description: Chart transversal base para despliegues en EKS
+name: eks-baseline
+description: Linea Base para despliegue en EKS
 type: application
-version: 1.0.0
-appVersion: "1.0"
-keywords:
-  - kubernetes
-  - eks
-  - baseline
-  - deployment
-maintainers:
-  - name: Platform Team
-    email: platform@example.com
+version: 0.1.0
+appVersion: "1.17.0"
