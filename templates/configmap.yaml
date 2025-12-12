@@ -1,10 +1,11 @@
-{{- if .Values.configMap.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "eks-baseline-chart.fullname" . }}
+  name: {{ .Values.microservice.name }}-configmap
+  namespace: {{ .Values.microservice.namespace }}
   labels:
-    {{- include "eks-baseline-chart.labels" . | nindent 4 }}
+    {{- include "eks-baseline.labels" . | nindent 4 }}
 data:
-  {{- toYaml .Values.configMap.data | nindent 2 }}
-{{- end }}
+  {{- if .Values.configmap.data }}
+{{ .Values.configmap.data | toYaml | indent 2 }}
+  {{- end }}
